@@ -31,13 +31,20 @@ public class AuthService {
         return AuthResponse.builder().accessToken(access).refreshToken(refresh).build();
     }
 
-    public AuthResponse register(String email, String rawPassword, String fullName) {
+    public AuthResponse register(String email, String rawPassword, String confirmPassword, String fullName, String phoneNumber) {
+        // Validate password confirmation
+        if (!rawPassword.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Mật khẩu và xác nhận mật khẩu không khớp");
+        }
+        
         String normalizedEmail = email == null ? null : email.trim().toLowerCase();
         if (users.existsByEmail(normalizedEmail)) throw new EmailAlreadyInUseException("Email already in use");
+        
         User user = User.builder()
                 .email(normalizedEmail)
                 .password(encoder.encode(rawPassword))
                 .fullName(fullName)
+                .phoneNumber(phoneNumber)
                 .enabled(true)
                 .roles(new HashSet<>(Set.of(Role.USER))) // ✅ gán role mặc định
                 .build();

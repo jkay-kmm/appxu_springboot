@@ -1,6 +1,7 @@
 package com.anhtrung.app_xu.web;
 
 import com.anhtrung.app_xu.dto.*;
+import com.anhtrung.app_xu.dto.SuccessResponse;
 import com.anhtrung.app_xu.service.AuthService;
 import com.anhtrung.app_xu.service.RefreshTokenService;
 import com.anhtrung.app_xu.service.EmailVerificationService;
@@ -36,7 +37,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest r){
-        var res = auth.register(r.getEmail(), r.getPassword(), r.getFullName());
+        var res = auth.register(r.getEmail(), r.getPassword(), r.getConfirmPassword(), r.getFullName(), r.getPhoneNumber());
         var cookie = ResponseCookie.from("refreshToken", res.getRefreshToken())
                 .httpOnly(true)
                 .secure(cookieSecure)
@@ -45,10 +46,10 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
         var user = users.findByEmail(r.getEmail()).orElseThrow();
-        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).roles(user.getRoles()).enabled(user.isEnabled()).build();
+        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).phoneNumber(user.getPhoneNumber()).roles(user.getRoles()).enabled(user.isEnabled()).build();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).user(userDto).build());
+                .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).user(userDto).message("Đăng ký thành công").build());
     }
 
 
@@ -63,10 +64,10 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
         var user = users.findByEmail(r.getEmail()).orElseThrow();
-        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).roles(user.getRoles()).enabled(user.isEnabled()).build();
+        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).phoneNumber(user.getPhoneNumber()).roles(user.getRoles()).enabled(user.isEnabled()).build();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).user(userDto).build());
+                .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).user(userDto).message("Đăng nhập thành công").build());
     }
 
 
@@ -84,7 +85,7 @@ public class AuthController {
         // whoami data is not required here, keep minimal
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).build());
+                .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).message("Refresh token thành công").build());
     }
 
 
@@ -118,15 +119,16 @@ public class AuthController {
     }
 
     @GetMapping("/whoami")
-    public ResponseEntity<MapResponse> whoami(){
+    public ResponseEntity<SuccessResponse> whoami(){
         Authentication authn = SecurityContextHolder.getContext().getAuthentication();
         var email = authn.getName();
         var user = users.findByEmail(email).orElseThrow();
-        return ResponseEntity.ok(new MapResponse(user.getId(), user.getEmail(), user.getFullName(), user.getRoles(), user.isEnabled()));
+        var userData = new MapResponse(user.getId(), user.getEmail(), user.getFullName(), user.getPhoneNumber(), user.getRoles(), user.isEnabled());
+        return ResponseEntity.ok(SuccessResponse.success("Lấy thông tin người dùng thành công", userData));
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest r){
+    public ResponseEntity<SuccessResponse> changePassword(@Valid @RequestBody ChangePasswordRequest r){
         Authentication authn = SecurityContextHolder.getContext().getAuthentication();
         var email = authn.getName();
         var user = users.findByEmail(email).orElseThrow();
@@ -135,25 +137,25 @@ public class AuthController {
         }
         user.setPassword(encoder.encode(r.getNewPassword()));
         users.save(user);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(SuccessResponse.success("Đổi mật khẩu thành công"));
     }
 
     @PostMapping("/resend-verification")
-    public ResponseEntity<Void> resendVerification(@RequestParam String email){
+    public ResponseEntity<SuccessResponse> resendVerification(@RequestParam String email){
         var user = users.findByEmail(email).orElseThrow();
         var token = emailVerifications.issue(user);
         mail.sendVerifyMail(user.getEmail(), token.getToken());
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok(SuccessResponse.success("Đã gửi lại email xác thực"));
     }
 
     @GetMapping("/verify-email")
-    public ResponseEntity<Void> verifyEmail(@RequestParam String token){
-        var user = emailVerifications.verify(token);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<SuccessResponse> verifyEmail(@RequestParam String token){
+        emailVerifications.verify(token);
+        return ResponseEntity.ok(SuccessResponse.success("Xác thực email thành công"));
     }
 }
 
 class MapResponse {
-    public Long id; public String email; public String fullName; public java.util.Set<com.anhtrung.app_xu.domain.Role> roles; public boolean enabled;
-    public MapResponse(Long id, String email, String fullName, java.util.Set<com.anhtrung.app_xu.domain.Role> roles, boolean enabled){ this.id=id; this.email=email; this.fullName=fullName; this.roles=roles; this.enabled=enabled; }
+    public Long id; public String email; public String fullName; public String phoneNumber; public java.util.Set<com.anhtrung.app_xu.domain.Role> roles; public boolean enabled;
+    public MapResponse(Long id, String email, String fullName, String phoneNumber, java.util.Set<com.anhtrung.app_xu.domain.Role> roles, boolean enabled){ this.id=id; this.email=email; this.fullName=fullName; this.phoneNumber=phoneNumber; this.roles=roles; this.enabled=enabled; }
 }

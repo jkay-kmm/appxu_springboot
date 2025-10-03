@@ -20,11 +20,12 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder encoder;
 
 
-    public User createUser(String email, String rawPassword, String fullName) {
+    public User createUser(String email, String rawPassword, String fullName, String phoneNumber) {
         var user = User.builder()
                 .email(email)
                 .password(encoder.encode(rawPassword))
                 .fullName(fullName)
+                .phoneNumber(phoneNumber)
                 .roles(Set.of(Role.USER))
                 .enabled(true)
                 .build();

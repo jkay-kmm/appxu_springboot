@@ -23,6 +23,8 @@ public class User {
 
     private String fullName;
 
+    private String phoneNumber;
+
     @Builder.Default
     private boolean enabled = true;
 

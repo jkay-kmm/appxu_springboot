@@ -12,6 +12,7 @@ public class UserDto {
     private Long id;
     private String email;
     private String fullName;
+    private String phoneNumber;
     private Set<Role> roles;
     private boolean enabled;
 }

@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.anhtrung.app_xu.dto.ChangePasswordRequest;
+import com.anhtrung.app_xu.dto.UpdateProfileRequest;
+import java.util.Map;
 
 
 @RestController @RequestMapping("/api/auth") @RequiredArgsConstructor
@@ -90,32 +92,13 @@ public class AuthController {
 
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@CookieValue("refreshToken") String refreshToken){
-        auth.logout(refreshToken);
-        var clear = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(cookieSecure)
-                .path("/api/auth")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
-        return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, clear.toString()).build();
-    }
-
-    @PostMapping("/logout-all")
-    public ResponseEntity<Void> logoutAll(){
-        Authentication authn = SecurityContextHolder.getContext().getAuthentication();
-        var email = authn.getName();
-        var user = users.findByEmail(email).orElseThrow();
-        refreshTokens.revokeAllForUser(user.getId());
-        var clear = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(cookieSecure)
-                .path("/api/auth")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
-        return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, clear.toString()).build();
+    public ResponseEntity<Map<String, Object>> logout(){
+        // Với JWT stateless, logout chỉ cần frontend xóa token
+        // Backend không cần làm gì đặc biệt
+        return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "message", "Đăng xuất thành công"
+        ));
     }
 
     @GetMapping("/whoami")
@@ -138,6 +121,35 @@ public class AuthController {
         user.setPassword(encoder.encode(r.getNewPassword()));
         users.save(user);
         return ResponseEntity.ok(SuccessResponse.success("Đổi mật khẩu thành công"));
+    }
+
+    @PutMapping("/update-profile")
+    public ResponseEntity<Map<String, Object>> updateProfile(@Valid @RequestBody UpdateProfileRequest request){
+        try {
+            Authentication authn = SecurityContextHolder.getContext().getAuthentication();
+            var email = authn.getName();
+            var user = users.findByEmail(email).orElseThrow();
+            
+            // Cập nhật thông tin
+            user.setFullName(request.getFullName());
+            user.setPhoneNumber(request.getPhoneNumber());
+            users.save(user);
+            
+            // Trả về thông tin đã cập nhật
+            var userData = new MapResponse(user.getId(), user.getEmail(), user.getFullName(), 
+                                         user.getPhoneNumber(), user.getRoles(), user.isEnabled());
+            
+            return ResponseEntity.ok(Map.of(
+                    "code", 200,
+                    "message", "Cập nhật hồ sơ thành công",
+                    "data", userData
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                    "code", 500,
+                    "message", "Lỗi khi cập nhật hồ sơ: " + e.getMessage()
+            ));
+        }
     }
 
     @PostMapping("/resend-verification")

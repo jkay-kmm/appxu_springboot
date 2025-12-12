@@ -26,6 +26,8 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService; // chính là UserService
     private final PasswordEncoder passwordEncoder;       // lấy từ BeansConfig
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public DaoAuthenticationProvider authProvider() {
@@ -46,10 +48,15 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/password/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/resend-verification").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/verify-email").permitAll()
+                        .requestMatchers("/api/password/**").permitAll()
+                        .requestMatchers("/api/password-otp/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
                 )
                 .authenticationProvider(authProvider());
 

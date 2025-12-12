@@ -29,4 +29,20 @@ public class MailService {
         msg.setText("Verify your email: " + verifyBase + token);
         mailSender.send(msg);
     }
+
+    public void sendOtpMail(String to, String otp) {
+        try {
+            var msg = new SimpleMailMessage();
+            msg.setTo(to);
+            msg.setSubject("Mã OTP đặt lại mật khẩu ");
+            msg.setText("Mã OTP của bạn là: " + otp + "\n\n" +
+                    "Mã này có hiệu lực trong 5 phút.\n" +
+                    "Vui lòng không chia sẻ mã này với ai khác.\n\n" +
+                    "Trân trọng,\nGreenXu Team");
+            mailSender.send(msg);
+        } catch (Exception e) {
+            System.out.println("Chưa có mã otp");
+           
+        }
+    }
 }

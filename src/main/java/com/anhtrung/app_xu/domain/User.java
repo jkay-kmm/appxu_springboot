@@ -26,6 +26,10 @@ public class User {
     private String phoneNumber;
 
     @Builder.Default
+    @Column(nullable = false)
+    private Double coin = 0.0; // Số coin của user, mặc định 0
+
+    @Builder.Default
     private boolean enabled = true;
 
     @ElementCollection(fetch = FetchType.EAGER)

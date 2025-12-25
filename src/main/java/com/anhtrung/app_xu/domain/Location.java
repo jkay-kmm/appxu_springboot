@@ -3,29 +3,33 @@ package com.anhtrung.app_xu.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "blogs")
+@Table(name = "locations")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Blog {
+public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    private String name;
 
     @Column(nullable = false)
-    private LocalDateTime time;
+    private String address;
 
     @Column(nullable = false)
-    private String image;
+    private Double lat; // Latitude
+
+    @Column(nullable = false)
+    private Double lng; // Longitude
+
+    @Column(nullable = false)
+    private String openTime;
+
+    @Column(nullable = false)
+    private Boolean isActive = true;
 }

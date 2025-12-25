@@ -48,7 +48,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
         var user = users.findByEmail(r.getEmail()).orElseThrow();
-        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).phoneNumber(user.getPhoneNumber()).roles(user.getRoles()).enabled(user.isEnabled()).build();
+        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).phoneNumber(user.getPhoneNumber()).coin(user.getCoin()).roles(user.getRoles()).enabled(user.isEnabled()).build();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).user(userDto).message("Đăng ký thành công").build());
@@ -66,7 +66,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
         var user = users.findByEmail(r.getEmail()).orElseThrow();
-        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).phoneNumber(user.getPhoneNumber()).roles(user.getRoles()).enabled(user.isEnabled()).build();
+        var userDto = UserDto.builder().id(user.getId()).email(user.getEmail()).fullName(user.getFullName()).phoneNumber(user.getPhoneNumber()).coin(user.getCoin()).roles(user.getRoles()).enabled(user.isEnabled()).build();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(AuthResponse.builder().accessToken(res.getAccessToken()).tokenType("Bearer").expiresIn(jwt.getAccessTtlMillis()/1000).user(userDto).message("Đăng nhập thành công").build());
@@ -106,7 +106,7 @@ public class AuthController {
         Authentication authn = SecurityContextHolder.getContext().getAuthentication();
         var email = authn.getName();
         var user = users.findByEmail(email).orElseThrow();
-        var userData = new MapResponse(user.getId(), user.getEmail(), user.getFullName(), user.getPhoneNumber(), user.getRoles(), user.isEnabled());
+        var userData = new MapResponse(user.getId(), user.getEmail(), user.getFullName(), user.getPhoneNumber(), user.getCoin(), user.getRoles(), user.isEnabled());
         return ResponseEntity.ok(SuccessResponse.success("Lấy thông tin người dùng thành công", userData));
     }
 
@@ -137,7 +137,7 @@ public class AuthController {
             
             // Trả về thông tin đã cập nhật
             var userData = new MapResponse(user.getId(), user.getEmail(), user.getFullName(), 
-                                         user.getPhoneNumber(), user.getRoles(), user.isEnabled());
+                                         user.getPhoneNumber(), user.getCoin(), user.getRoles(), user.isEnabled());
             
             return ResponseEntity.ok(Map.of(
                     "code", 200,
@@ -168,6 +168,6 @@ public class AuthController {
 }
 
 class MapResponse {
-    public Long id; public String email; public String fullName; public String phoneNumber; public java.util.Set<com.anhtrung.app_xu.domain.Role> roles; public boolean enabled;
-    public MapResponse(Long id, String email, String fullName, String phoneNumber, java.util.Set<com.anhtrung.app_xu.domain.Role> roles, boolean enabled){ this.id=id; this.email=email; this.fullName=fullName; this.phoneNumber=phoneNumber; this.roles=roles; this.enabled=enabled; }
+    public Long id; public String email; public String fullName; public String phoneNumber; public Double coin; public java.util.Set<com.anhtrung.app_xu.domain.Role> roles; public boolean enabled;
+    public MapResponse(Long id, String email, String fullName, String phoneNumber, Double coin, java.util.Set<com.anhtrung.app_xu.domain.Role> roles, boolean enabled){ this.id=id; this.email=email; this.fullName=fullName; this.phoneNumber=phoneNumber; this.coin=coin; this.roles=roles; this.enabled=enabled; }
 }

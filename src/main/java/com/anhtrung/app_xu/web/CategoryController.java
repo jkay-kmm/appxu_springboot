@@ -16,31 +16,8 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getCategories(
-            @RequestParam(required = false) WasteType type,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) WasteType type
     ) {
-        // Nếu có từ khóa tìm kiếm
-        if (search != null && !search.trim().isEmpty()) {
-            if (type != null) {
-                // Tìm kiếm theo từ khóa và type
-                var categories = categoryService.searchCategoriesByType(search.trim(), type);
-                return ResponseEntity.ok(Map.of(
-                        "code", 200,
-                        "message", "Tìm kiếm '" + search + "' trong loại " + type + " thành công",
-                        "data", categories
-                ));
-            } else {
-                // Tìm kiếm theo từ khóa trong tất cả
-                var categories = categoryService.searchCategories(search.trim());
-                return ResponseEntity.ok(Map.of(
-                        "code", 200,
-                        "message", "Tìm kiếm '" + search + "' thành công",
-                        "data", categories
-                ));
-            }
-        }
-        
-        // Không có tìm kiếm - logic cũ
         if (type != null) {
             var categories = categoryService.getCategoriesByType(type);
             return ResponseEntity.ok(Map.of(

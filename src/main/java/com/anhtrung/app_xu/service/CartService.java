@@ -22,7 +22,7 @@ public class CartService {
     private final UserRepository userRepository;
 
     @Transactional
-    public CartItemDto addToCart(String userEmail, Long categoryId, Double weight, Integer quantity) {
+    public CartItemDto addToCart(String userEmail, Long categoryId, Integer quantity) {
         System.out.println("Finding user: " + userEmail);
         var user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
@@ -39,17 +39,16 @@ public class CartService {
         
         CartItem cartItem;
         if (existingItem.isPresent()) {
-            // Cập nhật quantity và weight
+            // Cập nhật quantity
             cartItem = existingItem.get();
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
-            cartItem.setWeight(cartItem.getWeight() + weight);
         } else {
             // Tạo mới
             cartItem = CartItem.builder()
                     .user(user)
                     .category(category)
                     .quantity(quantity)
-                    .weight(weight)
+                    .weight(1.0) // Mặc định 1kg cho mỗi item
                     .build();
         }
         
@@ -96,6 +95,20 @@ public class CartService {
         return cartItemRepository.countByUser(user);
     }
 
+    public CartItemDto getCartItem(String userEmail, Long cartItemId) {
+        var user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        
+        var cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Cart item không tồn tại"));
+        
+        if (!cartItem.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Cart item không thuộc về user này");
+        }
+        
+        return toDto(cartItem);
+    }
+
     private CartItemDto toDto(CartItem cartItem) {
         var categoryDto = CategoryDto.builder()
                 .id(cartItem.getCategory().getId())
@@ -111,7 +124,7 @@ public class CartService {
                 .category(categoryDto)
                 .quantity(cartItem.getQuantity())
                 .weight(cartItem.getWeight())
-                .totalPrice(cartItem.getWeight() * cartItem.getCategory().getPrice())
+                .totalPrice(cartItem.getQuantity() * cartItem.getCategory().getPrice())
                 .addedAt(cartItem.getAddedAt())
                 .build();
     }

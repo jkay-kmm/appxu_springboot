@@ -28,7 +28,7 @@ public class CartController {
             System.out.println("User email: " + userEmail);
             
             var cartItem = cartService.addToCart(userEmail, request.getCategoryId(), 
-                                               request.getWeight(), request.getQuantity());
+                                               request.getQuantity());
             
             System.out.println("Cart item created successfully");
             
@@ -43,7 +43,7 @@ public class CartController {
                             "price", cartItem.getCategory().getPrice(),
                             "description", cartItem.getCategory().getDescription(),
                             "type", cartItem.getCategory().getType(),
-                            "weight", cartItem.getWeight(),
+    
                             "quantity", cartItem.getQuantity(),
                             "totalPrice", cartItem.getTotalPrice(),
                             "addedAt", cartItem.getAddedAt()
@@ -79,6 +79,26 @@ public class CartController {
                         "totalPrice", totalPrice
                 )
         ));
+    }
+
+    @GetMapping("/{cartItemId}")
+    public ResponseEntity<Map<String, Object>> getCartItem(@PathVariable Long cartItemId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = auth.getName();
+        
+        try {
+            var cartItem = cartService.getCartItem(userEmail, cartItemId);
+            return ResponseEntity.ok(Map.of(
+                    "code", 200,
+                    "message", "Lấy thông tin cart item thành công",
+                    "data", cartItem
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(Map.of(
+                    "code", 404,
+                    "message", "Cart item không tồn tại hoặc không thuộc về bạn"
+            ));
+        }
     }
 
     @DeleteMapping("/{cartItemId}")

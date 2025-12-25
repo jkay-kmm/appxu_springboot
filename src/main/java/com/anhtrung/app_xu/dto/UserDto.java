@@ -13,6 +13,7 @@ public class UserDto {
     private String email;
     private String fullName;
     private String phoneNumber;
+    private Double coin;
     private Set<Role> roles;
     private boolean enabled;
 }

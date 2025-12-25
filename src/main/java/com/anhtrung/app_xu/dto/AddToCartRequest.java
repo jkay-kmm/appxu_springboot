@@ -9,9 +9,7 @@ public class AddToCartRequest {
     @NotNull(message = "Category ID không được để trống")
     private Long categoryId;
 
-    @NotNull(message = "Cân nặng không được để trống")
-    @Positive(message = "Cân nặng phải lớn hơn 0")
-    private Double weight; // Cân nặng thực tế (kg)
-
-    private Integer quantity = 1; // Số lượng (mặc định 1)
+    @NotNull(message = "Số lượng không được để trống")
+    @Positive(message = "Số lượng phải lớn hơn 0")
+    private Integer quantity = 1; // Số lượng
 }

@@ -27,18 +27,6 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryDto> searchCategories(String keyword) {
-        return categoryRepository.findByKeyword(keyword).stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<CategoryDto> searchCategoriesByType(String keyword, WasteType type) {
-        return categoryRepository.findByKeywordAndType(keyword, type).stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
-
     private CategoryDto toDto(Category category) {
         return CategoryDto.builder()
                 .id(category.getId())

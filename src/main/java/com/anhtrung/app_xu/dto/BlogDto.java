@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class BlogDto {
     private Long id;
     private String title;
+    private String description;
     private LocalDateTime time;
     private String image;
 }

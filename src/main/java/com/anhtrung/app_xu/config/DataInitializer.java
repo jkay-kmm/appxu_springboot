@@ -24,11 +24,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Chỉ update categories khi chưa có dữ liệu
-        if (categoryRepository.count() == 0) {
-            // Chỉ xóa cart khi thực sự cần update categories
-            cartItemRepository.deleteAll();
-            categoryRepository.deleteAll();
+        cartItemRepository.deleteAll();
+        categoryRepository.deleteAll();
+        if (true) { // Force chạy để update ảnh mới
 
     // ===== KIM LOAI =====
     categoryRepository.save(Category.builder()
@@ -36,7 +34,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Nhôm")
             .description("Chất thải nhôm là chất thải kim loại có thời gian phân hủy rất lâu do vật liệu phi sinh học. Nhôm được tạo ra qua khai thác quặng, tinh luyện, nấu chảy và đúc định hình.")
             .price(12000.0)
-            .image("http://localhost:8083/images/nhôm.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766651901/greenxu/bjtfh5paavpw1ar6k3xp.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -44,7 +42,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Sắt rắn")
             .description("Chất thải sắt rắn là chất thải kim loại bền, khó phân hủy trong môi trường vì là vật liệu phi sinh học. Sắt được tạo ra từ luyện quặng, nung chảy, tinh luyện và gia công.")
             .price(6000.0)
-            .image("http://localhost:8083/images/sắt_rắn.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766651927/greenxu/nrjszfthhk5u9uyfatig.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -52,7 +50,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Lon nhôm")
             .description("Chất thải lon nhôm là chất thải kim loại có thời gian phân hủy rất dài do cấu tạo phi sinh học. Lon nhôm được tạo ra bằng nấu chảy nhôm, cán mỏng, tạo hình và phủ lớp bảo vệ.")
             .price(9000.0)
-            .image("http://localhost:8083/images/lonnhom.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766651960/greenxu/hvsnqr5wv4lnvhuiasvm.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -60,7 +58,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Đồng thau")
             .description("Chất thải đồng thau là chất thải hợp kim kim loại bền, phân hủy rất chậm vì là vật liệu phi sinh học. Đồng thau được tạo ra bằng nấu chảy đồng và kẽm, sau đó đúc và gia công.")
             .price(25000.0)
-            .image("http://localhost:8083/images/dongthau.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766651984/greenxu/bz4koey6jc3kr2eknahr.png")
             .build());
 
     // ===== DIEN TU =====
@@ -69,7 +67,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Màn hình LCD")
             .description("Chất thải màn hình LCD là chất thải điện tử khó phân hủy do gồm nhiều linh kiện phi sinh học. Màn hình LCD được tạo ra bằng quy trình lắp ráp tấm nền, lớp tinh thể lỏng, mạch điều khiển và đèn nền.")
             .price(30000.0)
-            .image("http://localhost:8083/images/manhinhLCD.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652042/greenxu/uiwebmqntarzqyrdlifc.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -77,7 +75,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Màn hình hỏng")
             .description("Chất thải màn hình hỏng là chất thải điện tử có nhiều thành phần phi sinh học nên rất khó phân hủy. Màn hình được sản xuất bằng chế tạo tấm hiển thị, bo mạch, nguồn và lắp ráp, sau đó đóng khung hoàn thiện.")
             .price(20000.0)
-            .image("http://localhost:8083/images/manhinhong.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652013/greenxu/tutkrajusbjwe1ssep7p.png")
             .build());
 
     // ===== THUY TINH =====
@@ -86,7 +84,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Chai nguyên tử")
             .description("Chất thải chai nguyên tử là chất thải làm từ thủy tinh, phân hủy cực lâu do vật liệu phi sinh học. Chai/ống thủy tinh nhỏ được tạo ra qua nấu chảy, tạo hình và làm nguội.")
             .price(2000.0)
-            .image("http://localhost:8083/images/chaithuytinh.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652064/greenxu/uuk0sflhclhjune7pqzi.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -94,7 +92,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Chai thủy tinh")
             .description("Chất thải chai thủy tinh là chất thải làm từ thủy tinh có thời gian phân hủy lên tới 1 triệu năm. Điều này là do nhìn chung chất thải này được tạo ra bằng cách sử dụng các vật liệu phi sinh học. Chất thải từ chai thủy tinh được tạo ra thông qua quá trình nấu chảy và làm nguội.")
             .price(3000.0)
-            .image("http://localhost:8083/images/chaithuytinh.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652089/greenxu/e2navr97flyeeapc2nq4.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -102,7 +100,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Kính vỡ")
             .description("Chất thải kính vỡ là chất thải từ các tấm kính hoặc mảnh thủy tinh, có thời gian phân hủy rất lâu do vật liệu phi sinh học. Kính được tạo ra bằng nấu chảy thủy tinh, định hình thành tấm và làm nguội.")
             .price(1500.0)
-            .image("http://localhost:8083/images/kinhvo.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652130/greenxu/amnwdzfifcaospj3ijat.png")
             .build());
 
     // ===== GIAY =====
@@ -111,7 +109,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Sách")
             .description("Chất thải sách là chất thải giấy có nguồn gốc hữu cơ nên phân hủy nhanh hơn nhựa và thủy tinh. Sách được tạo ra từ nghiền bột giấy, xeo giấy, in ấn, đóng gáy và hoàn thiện thành phẩm.")
             .price(2500.0)
-            .image("http://localhost:8083/images/sach.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652155/greenxu/wwz0wkphjtyqexpw3rxo.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -119,7 +117,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Hộp bìa carton")
             .description("Chất thải hộp bìa carton là chất thải giấy bìa cứng, phân hủy tương đối nhanh do chủ yếu từ sợi cellulose. Carton được tạo ra bằng xeo giấy nhiều lớp, ép sóng, dán ghép, cắt gấp và tạo hình.")
             .price(3000.0)
-            .image("http://localhost:8083/images/hopbiacatong.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652174/greenxu/wkfpikefgkzgmho5ayqa.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -127,7 +125,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Túi giấy")
             .description("Chất thải túi giấy là chất thải từ giấy có nguồn gốc hữu cơ nên có thể phân hủy sinh học nhanh hơn nhựa. Túi giấy được tạo ra bằng xeo giấy, cắt khuôn, dán mép, gấp tạo đáy và gia cố quai.")
             .price(2000.0)
-            .image("http://localhost:8083/images/tuigiay.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652197/greenxu/lafttr4hymg2njnfrl65.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -135,7 +133,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Giấy ghi chú")
             .description("Chất thải giấy ghi chú là chất thải giấy mỏng, dễ phân hủy do làm từ sợi bột gỗ và phụ gia. Giấy ghi chú được tạo ra qua xeo giấy, cán mỏng, cắt kích thước, phủ keo dính và đóng thành tập.")
             .price(1800.0)
-            .image("http://localhost:8083/images/giayghichu.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652216/greenxu/yjixgip7ojesvjqknbyv.png")
             .build());
 
     // ===== NHUA =====
@@ -144,7 +142,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Dầu ăn")
             .description("Chất thải dầu ăn đã qua sử dụng là chất thải hữu cơ dạng lỏng, khó xử lý nếu thải trực tiếp ra môi trường và có thể gây ô nhiễm nước. Dầu ăn được tạo ra từ ép hoặc tinh luyện dầu, sau đó dùng trong nấu nướng.")
             .price(1000.0)
-            .image("http://localhost:8083/images/dauan.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652234/greenxu/rkfn1svhnu3exztmrvaj.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -152,7 +150,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Xô nhựa")
             .description("Chất thải xô nhựa là chất thải nhựa có thời gian phân hủy rất lâu do cấu tạo từ polymer phi sinh học. Xô nhựa được tạo ra bằng nung chảy hạt nhựa, ép khuôn hoặc ép phun, rồi làm nguội và hoàn thiện.")
             .price(3500.0)
-            .image("http://localhost:8083/images/xonhua.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652267/greenxu/g2wgxz0vwd9xubatmvt7.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -160,7 +158,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Chai nhựa")
             .description("Chất thải chai nhựa là chất thải polymer có thời gian phân hủy kéo dài hàng trăm năm vì là vật liệu phi sinh học. Chai nhựa được tạo ra bằng nung chảy hạt nhựa, thổi khuôn tạo hình, sau đó làm nguội và đóng nắp.")
             .price(3000.0)
-            .image("http://localhost:8083/images/chainhua.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652287/greenxu/q129kyuuoqiznsdus9a9.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -168,7 +166,7 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Cốc nhựa")
             .description("Chất thải cốc nhựa là chất thải từ nhựa tổng hợp, khó phân hủy trong tự nhiên do polymer phi sinh học. Cốc nhựa được tạo ra bằng nung chảy hạt nhựa, ép nhiệt hoặc ép phun, tạo hình và làm nguội.")
             .price(2000.0)
-            .image("http://localhost:8083/images/cocnhua.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652305/greenxu/lmvtph7r0e48n1fvd4ch.png")
             .build());
 
     categoryRepository.save(Category.builder()
@@ -176,12 +174,13 @@ public class DataInitializer implements CommandLineRunner {
             .notes("Nắp chai")
             .description("Chất thải nắp chai là chất thải nhựa nhỏ, phân hủy rất lâu do làm từ polymer phi sinh học như PP/HDPE. Nắp chai được tạo ra bằng ép phun nhựa nóng chảy vào khuôn, sau đó làm nguội và tạo ren khóa.")
             .price(2500.0)
-            .image("http://localhost:8083/images/napchai.png")
+            .image("https://res.cloudinary.com/dmppisupw/image/upload/v1766652322/greenxu/qxp2po49xwidhed44nia.png")
             .build());
 
 }
-        // Thêm dữ liệu blog (chỉ khi chưa có)
-        if (blogRepository.count() == 0) {
+        // FORCE UPDATE blogs với ảnh mới
+        blogRepository.deleteAll();
+        if (true) { // Force chạy để update ảnh mới
             blogRepository.save(Blog.builder()
                     .title("5 Lợi ích của việc tái chế rác thải điện tử")
                     .description("Rác thải điện tử đang trở thành một vấn đề môi trường nghiêm trọng trên toàn thế giới. Việc tái chế rác thải điện tử không chỉ giúp bảo vệ môi trường mà còn mang lại nhiều lợi ích kinh tế và xã hội. Thứ nhất, tái chế giúp giảm thiểu ô nhiễm môi trường do các chất độc hại như chì, thủy ngân, cadmium có trong thiết bị điện tử. Thứ hai, việc tái chế giúp tiết kiệm tài nguyên thiên nhiên bằng cách tái sử dụng các kim loại quý như vàng, bạc, đồng. Thứ ba, tạo ra nhiều việc làm trong ngành công nghiệp tái chế. Thứ tư, giảm chi phí sản xuất thiết bị mới. Thứ năm, góp phần xây dựng nền kinh tế tuần hoàn bền vững. Để tham gia tái chế hiệu quả, người dân cần phân loại rác điện tử đúng cách, tìm hiểu các điểm thu gom uy tín và nâng cao ý thức bảo vệ môi trường. Mỗi hành động nhỏ của chúng ta đều góp phần tạo nên một tương lai xanh sạch đẹp hơn.")

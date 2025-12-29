@@ -1,5 +1,4 @@
-package com.anhtrung.app_xu.web;
-
+package com.anhtrung.app_xu.controller;
 import com.anhtrung.app_xu.service.CloudinaryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

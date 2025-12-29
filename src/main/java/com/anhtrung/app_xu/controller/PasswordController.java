@@ -1,5 +1,4 @@
-package com.anhtrung.app_xu.web;
-
+package com.anhtrung.app_xu.controller;
 import com.anhtrung.app_xu.dto.ForgotPasswordRequest;
 import com.anhtrung.app_xu.dto.ResetPasswordRequest;
 import com.anhtrung.app_xu.dto.SuccessResponse;

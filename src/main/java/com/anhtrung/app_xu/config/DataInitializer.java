@@ -8,6 +8,8 @@ import com.anhtrung.app_xu.repo.BlogRepository;
 import com.anhtrung.app_xu.repo.CategoryRepository;
 import com.anhtrung.app_xu.repo.CartItemRepository;
 import com.anhtrung.app_xu.repo.LocationRepository;
+import com.anhtrung.app_xu.repo.WasteRequestItemRepository;
+import com.anhtrung.app_xu.repo.WasteRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -21,11 +23,22 @@ public class DataInitializer implements CommandLineRunner {
     private final BlogRepository blogRepository;
     private final CartItemRepository cartItemRepository;
     private final LocationRepository locationRepository;
+    private final WasteRequestItemRepository wasteRequestItemRepository;
+    private final WasteRequestRepository wasteRequestRepository;
 
     @Override
     public void run(String... args) {
+        // Chỉ chạy khi database trống để tránh xóa data có sẵn
+        if (categoryRepository.count() > 0) {
+            System.out.println("⚠️ Database đã có data, bỏ qua việc khởi tạo");
+            return;
+        }
+        
+        // Xóa theo thứ tự để tránh foreign key constraint (chỉ khi database trống)
+        wasteRequestItemRepository.deleteAll(); // Xóa items trước
+        wasteRequestRepository.deleteAll(); // Xóa requests sau
         cartItemRepository.deleteAll();
-        categoryRepository.deleteAll();
+        categoryRepository.deleteAll(); // Cuối cùng mới xóa categories
         if (true) { // Force chạy để update ảnh mới
 
     // ===== KIM LOAI =====

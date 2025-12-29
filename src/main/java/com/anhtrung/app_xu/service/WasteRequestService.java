@@ -31,14 +31,13 @@ public class WasteRequestService {
                 .contactName(dto.getContactName())
                 .scheduledDate(dto.getScheduledDate())
                 .notes(dto.getNotes())
-                .images(dto.getImages())
+                // Đã xóa .images(dto.getImages())
                 .status(RequestStatus.PENDING)
                 .build();
 
         wasteRequest = wasteRequestRepository.save(wasteRequest);
 
-        // Tạo waste request items và tính tổng tiền ước tính
-        double estimatedTotal = 0.0;
+        // Tạo waste request items
         for (var itemDto : dto.getItems()) {
             var category = categoryRepository.findById(itemDto.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category không tồn tại"));
@@ -46,17 +45,21 @@ public class WasteRequestService {
             var item = WasteRequestItem.builder()
                     .wasteRequest(wasteRequest)
                     .category(category)
-                    .estimatedWeight(itemDto.getEstimatedWeight())
                     .quantity(itemDto.getQuantity())
                     .build();
 
             wasteRequestItemRepository.save(item);
-            estimatedTotal += itemDto.getEstimatedWeight() * category.getPrice();
         }
 
-        // Cập nhật tổng tiền ước tính
-        wasteRequest.setEstimatedTotal(estimatedTotal);
-        return wasteRequestRepository.save(wasteRequest);
+        wasteRequest.setEstimatedTotal(0.0);
+        wasteRequest = wasteRequestRepository.save(wasteRequest);
+        
+        // Load items trực tiếp với category
+        var items = wasteRequestItemRepository.findByWasteRequestWithCategory(wasteRequest);
+        wasteRequest.setItems(items);
+        
+        System.out.println("✅ Loaded " + items.size() + " items for request " + wasteRequest.getId());
+        return wasteRequest;
     }
 
     public List<WasteRequest> getUserRequests(String userEmail) {

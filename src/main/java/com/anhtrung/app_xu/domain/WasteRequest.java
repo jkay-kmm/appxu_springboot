@@ -1,5 +1,7 @@
 package com.anhtrung.app_xu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +22,7 @@ public class WasteRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore // Ẩn thông tin user trong response
     private User user;
 
     // Thông tin địa chỉ
@@ -44,12 +47,18 @@ public class WasteRequest {
     @ElementCollection
     @CollectionTable(name = "waste_request_images", joinColumns = @JoinColumn(name = "request_id"))
     @Column(name = "image_url")
+    @JsonIgnore // Ẩn trường images khỏi API response
     private List<String> images;
 
     // Trạng thái
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RequestStatus status = RequestStatus.PENDING;
+
+    // Danh sách items
+    @OneToMany(mappedBy = "wasteRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // Quản lý reference cho items
+    private List<WasteRequestItem> items;
 
     // Tổng tiền ước tính
     private Double estimatedTotal = 0.0;

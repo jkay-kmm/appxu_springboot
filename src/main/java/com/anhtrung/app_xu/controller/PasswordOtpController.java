@@ -1,4 +1,4 @@
-package com.anhtrung.app_xu.web;
+package com.anhtrung.app_xu.controller;
 
 import com.anhtrung.app_xu.dto.*;
 import com.anhtrung.app_xu.service.MailService;

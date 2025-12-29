@@ -1,4 +1,4 @@
-package com.anhtrung.app_xu.web;
+package com.anhtrung.app_xu.controller;
 
 import com.anhtrung.app_xu.domain.RequestStatus;
 import com.anhtrung.app_xu.dto.CreateWasteRequestDto;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/waste-requests")
+@RequestMapping("/api/waste")
 @RequiredArgsConstructor
 public class WasteRequestController {
     private final WasteRequestService wasteRequestService;
@@ -29,12 +29,7 @@ public class WasteRequestController {
             return ResponseEntity.ok(Map.of(
                     "code", 200,
                     "message", "Tạo yêu cầu thu gom thành công",
-                    "data", Map.of(
-                            "requestId", request.getId(),
-                            "status", request.getStatus(),
-                            "estimatedTotal", request.getEstimatedTotal(),
-                            "scheduledDate", request.getScheduledDate()
-                    )
+                    "data", request
             ));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(

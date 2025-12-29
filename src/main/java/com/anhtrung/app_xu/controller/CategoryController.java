@@ -1,5 +1,4 @@
-package com.anhtrung.app_xu.web;
-
+package com.anhtrung.app_xu.controller;
 import com.anhtrung.app_xu.domain.WasteType;
 import com.anhtrung.app_xu.service.CategoryService;
 import lombok.RequiredArgsConstructor;

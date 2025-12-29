@@ -27,15 +27,12 @@ public class CreateWasteRequestDto {
     @NotEmpty(message = "Phải có ít nhất 1 loại rác")
     private List<WasteItemDto> items;
 
-    private List<String> images; // URLs ảnh đã upload
+    // Đã xóa trường images
 
     @Data
     public static class WasteItemDto {
         @NotNull(message = "Category ID không được để trống")
         private Long categoryId;
-
-        @NotNull(message = "Cân nặng ước tính không được để trống")
-        private Double estimatedWeight;
 
         private Integer quantity = 1;
     }

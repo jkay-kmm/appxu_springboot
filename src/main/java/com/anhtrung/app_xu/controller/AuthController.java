@@ -168,6 +168,12 @@ public class AuthController {
 }
 
 class MapResponse {
-    public Long id; public String email; public String fullName; public String phoneNumber; public Double coin; public java.util.Set<com.anhtrung.app_xu.domain.Role> roles; public boolean enabled;
+    public Long id; 
+    public String email; 
+    public String fullName;
+     public String phoneNumber; 
+     public Double coin; 
+     public java.util.Set<com.anhtrung.app_xu.domain.Role> roles; 
+     public boolean enabled;
     public MapResponse(Long id, String email, String fullName, String phoneNumber, Double coin, java.util.Set<com.anhtrung.app_xu.domain.Role> roles, boolean enabled){ this.id=id; this.email=email; this.fullName=fullName; this.phoneNumber=phoneNumber; this.coin=coin; this.roles=roles; this.enabled=enabled; }
 }

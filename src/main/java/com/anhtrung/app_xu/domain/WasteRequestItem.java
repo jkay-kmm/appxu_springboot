@@ -1,5 +1,6 @@
 package com.anhtrung.app_xu.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,14 +18,12 @@ public class WasteRequestItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id", nullable = false)
+    @JsonBackReference // Ngăn circular reference
     private WasteRequest wasteRequest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
-    @Column(nullable = false)
-    private Double estimatedWeight; // Cân nặng ước tính (kg)
 
     @Column(nullable = false)
     private Integer quantity = 1; // Số lượng

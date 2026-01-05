@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class LocationDto {
     private Long id;
+    private String code;
     private String name;
     private String address;
     private Double lat;

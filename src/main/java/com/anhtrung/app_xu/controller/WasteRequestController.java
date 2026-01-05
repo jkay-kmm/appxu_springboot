@@ -103,4 +103,25 @@ public class WasteRequestController {
             ));
         }
     }
+
+    @GetMapping("/history")
+    public ResponseEntity<Map<String, Object>> getTransactionHistory() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String userEmail = auth.getName();
+
+            var history = wasteRequestService.getTransactionHistory(userEmail);
+
+            return ResponseEntity.ok(Map.of(
+                    "code", 200,
+                    "message", "Lấy lịch sử giao dịch thành công",
+                    "data", history
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                    "code", 500,
+                    "message", "Lỗi khi lấy lịch sử giao dịch: " + e.getMessage()
+            ));
+        }
+    }
 }

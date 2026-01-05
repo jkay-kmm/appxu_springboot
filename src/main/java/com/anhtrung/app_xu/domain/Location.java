@@ -15,6 +15,9 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String code; // Mã địa điểm như MK001, HN002, etc.
+
     @Column(nullable = false)
     private String name;
 
@@ -31,5 +34,6 @@ public class Location {
     private String openTime;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 }

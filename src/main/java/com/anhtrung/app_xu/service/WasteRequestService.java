@@ -2,6 +2,7 @@ package com.anhtrung.app_xu.service;
 
 import com.anhtrung.app_xu.domain.*;
 import com.anhtrung.app_xu.dto.CreateWasteRequestDto;
+import com.anhtrung.app_xu.dto.TransactionHistoryDto;
 import com.anhtrung.app_xu.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class WasteRequestService {
     private final WasteRequestItemRepository wasteRequestItemRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Transactional
     public WasteRequest createRequest(String userEmail, CreateWasteRequestDto dto) {
@@ -37,7 +39,8 @@ public class WasteRequestService {
 
         wasteRequest = wasteRequestRepository.save(wasteRequest);
 
-        // Tạo waste request items
+        // Tạo waste request items và tính tổng tiền
+        double totalEstimated = 0.0;
         for (var itemDto : dto.getItems()) {
             var category = categoryRepository.findById(itemDto.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category không tồn tại"));
@@ -49,16 +52,24 @@ public class WasteRequestService {
                     .build();
 
             wasteRequestItemRepository.save(item);
+            
+            // Tính tiền ước tính: quantity * price của category
+            totalEstimated += itemDto.getQuantity() * category.getPrice();
         }
 
-        wasteRequest.setEstimatedTotal(0.0);
+        // Cập nhật tổng tiền ước tính
+        wasteRequest.setEstimatedTotal(totalEstimated);
         wasteRequest = wasteRequestRepository.save(wasteRequest);
         
         // Load items trực tiếp với category
         var items = wasteRequestItemRepository.findByWasteRequestWithCategory(wasteRequest);
         wasteRequest.setItems(items);
         
+        // Clear cart sau khi tạo waste request thành công
+        clearUserCart(user);
+        
         System.out.println("✅ Loaded " + items.size() + " items for request " + wasteRequest.getId());
+        System.out.println("✅ Cleared user cart after successful waste request creation");
         return wasteRequest;
     }
 
@@ -98,5 +109,34 @@ public class WasteRequestService {
         
         request.setStatus(RequestStatus.CANCELLED);
         wasteRequestRepository.save(request);
+    }
+
+    public List<TransactionHistoryDto> getTransactionHistory(String userEmail) {
+        var user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        
+        return wasteRequestRepository.findByUserOrderByCreatedAtDesc(user).stream()
+                .map(this::convertToTransactionHistory)
+                .collect(Collectors.toList());
+    }
+
+    private TransactionHistoryDto convertToTransactionHistory(WasteRequest request) {
+        return TransactionHistoryDto.builder()
+                .id(request.getId())
+                .price(request.getEstimatedTotal())
+                .status(request.getStatus())
+                .createdAt(request.getCreatedAt())
+                .build();
+    }
+
+    /**
+     * Clear tất cả items trong cart của user
+     */
+    private void clearUserCart(User user) {
+        long cartItemCount = cartItemRepository.countByUser(user);
+        if (cartItemCount > 0) {
+            cartItemRepository.deleteByUser(user);
+            System.out.println("🗑️ Cleared " + cartItemCount + " items from user cart");
+        }
     }
 }

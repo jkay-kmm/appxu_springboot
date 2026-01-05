@@ -15,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -28,9 +29,63 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Chỉ chạy khi database trống để tránh xóa data có sẵn
+        // FORCE UPDATE locations với code mới (chạy độc lập)
+        locationRepository.deleteAll();
+        locationRepository.save(Location.builder()
+                .code("DD001")
+                .name("Trung tâm Thu gom Rác Tái chế Đống Đa")
+                .address("123 Phố Huế, Đống Đa, Hà Nội")
+                .lat(21.0227)
+                .lng(105.8542)
+                .openTime("7:00 - 18:00 (Thứ 2 - Chủ nhật)")
+                .isActive(true)
+                .build());
+
+        locationRepository.save(Location.builder()
+                .code("CG002")
+                .name("Điểm Thu gom GreenXu - Cầu Giấy")
+                .address("456 Nguyễn Trãi, Cầu Giấy, Hà Nội")
+                .lat(21.0285)
+                .lng(105.8048)
+                .openTime("6:30 - 19:00 (Hàng ngày)")
+                .isActive(true)
+                .build());
+
+        locationRepository.save(Location.builder()
+                .code("HK003")
+                .name("Trạm Tái chế Hoàn Kiếm")
+                .address("789 Hàng Bài, Hoàn Kiếm, Hà Nội")
+                .lat(21.0245)
+                .lng(105.8412)
+                .openTime("8:00 - 17:30 (Thứ 2 - Thứ 7)")
+                .isActive(true)
+                .build());
+
+        locationRepository.save(Location.builder()
+                .code("TX004")
+                .name("Kho Thu mua Rác Tái chế Thanh Xuân")
+                .address("321 Lê Văn Lương, Thanh Xuân, Hà Nội")
+                .lat(21.0058)
+                .lng(105.8019)
+                .openTime("7:30 - 18:30 (Thứ 2 - Chủ nhật)")
+                .isActive(true)
+                .build());
+
+        locationRepository.save(Location.builder()
+                .code("LB005")
+                .name("Trung tâm Môi trường Xanh - Long Biên")
+                .address("654 Nguyễn Văn Cừ, Long Biên, Hà Nội")
+                .lat(21.0583)
+                .lng(105.8644)
+                .openTime("6:00 - 18:00 (Hàng ngày)")
+                .isActive(false)
+                .build());
+
+        System.out.println("✅ Đã cập nhật " + locationRepository.count() + " locations với code mới");
+
+        // Chỉ chạy categories khi database trống để tránh xóa data có sẵn
         if (categoryRepository.count() > 0) {
-            System.out.println("⚠️ Database đã có data, bỏ qua việc khởi tạo");
+            System.out.println("⚠️ Database đã có data, bỏ qua việc khởi tạo categories");
             return;
         }
         
@@ -38,8 +93,8 @@ public class DataInitializer implements CommandLineRunner {
         wasteRequestItemRepository.deleteAll(); // Xóa items trước
         wasteRequestRepository.deleteAll(); // Xóa requests sau
         cartItemRepository.deleteAll();
-        categoryRepository.deleteAll(); // Cuối cùng mới xóa categories
-        if (true) { // Force chạy để update ảnh mới
+        categoryRepository.deleteAll(); // Cuối cùng mới xóa categories 
+        if (true) {
 
     // ===== KIM LOAI =====
     categoryRepository.save(Category.builder()
@@ -191,7 +246,7 @@ public class DataInitializer implements CommandLineRunner {
             .build());
 
 }
-        // FORCE UPDATE blogs với ảnh mới
+        
         blogRepository.deleteAll();
         if (true) { // Force chạy để update ảnh mới
             blogRepository.save(Blog.builder()
@@ -230,56 +285,6 @@ public class DataInitializer implements CommandLineRunner {
                     .build());
 
         
-        }
-
-        // Thêm dữ liệu locations (chỉ khi chưa có)
-        if (locationRepository.count() == 0) {
-            locationRepository.save(Location.builder()
-                    .name("Trung tâm Thu gom Rác Tái chế Đống Đa")
-                    .address("123 Phố Huế, Đống Đa, Hà Nội")
-                    .lat(21.0227)
-                    .lng(105.8542)
-                    .openTime("7:00 - 18:00 (Thứ 2 - Chủ nhật)")
-                    .isActive(true)
-                    .build());
-
-            locationRepository.save(Location.builder()
-                    .name("Điểm Thu gom GreenXu - Cầu Giấy")
-                    .address("456 Nguyễn Trãi, Cầu Giấy, Hà Nội")
-                    .lat(21.0285)
-                    .lng(105.8048)
-                    .openTime("6:30 - 19:00 (Hàng ngày)")
-                    .isActive(true)
-                    .build());
-
-            locationRepository.save(Location.builder()
-                    .name("Trạm Tái chế Hoàn Kiếm")
-                    .address("789 Hàng Bài, Hoàn Kiếm, Hà Nội")
-                    .lat(21.0245)
-                    .lng(105.8412)
-                    .openTime("8:00 - 17:30 (Thứ 2 - Thứ 7)")
-                    .isActive(true)
-                    .build());
-
-            locationRepository.save(Location.builder()
-                    .name("Kho Thu mua Rác Tái chế Thanh Xuân")
-                    .address("321 Lê Văn Lương, Thanh Xuân, Hà Nội")
-                    .lat(21.0058)
-                    .lng(105.8019)
-                    .openTime("7:30 - 18:30 (Thứ 2 - Chủ nhật)")
-                    .isActive(true)
-                    .build());
-
-            locationRepository.save(Location.builder()
-                    .name("Trung tâm Môi trường Xanh - Long Biên")
-                    .address("654 Nguyễn Văn Cừ, Long Biên, Hà Nội")
-                    .lat(21.0583)
-                    .lng(105.8644)
-                    .openTime("6:00 - 18:00 (Hàng ngày)")
-                    .isActive(false) // Tạm đóng cửa
-                    .build());
-
-            System.out.println("✅ Đã thêm " + locationRepository.count() + " locations vào database");
         }
     }
 }

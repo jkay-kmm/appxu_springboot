@@ -29,6 +29,7 @@ public class LocationService {
     private LocationDto toDto(Location location) {
         return LocationDto.builder()
                 .id(location.getId())
+                .code(location.getCode())
                 .name(location.getName())
                 .address(location.getAddress())
                 .lat(location.getLat())
